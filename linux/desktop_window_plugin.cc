@@ -2,7 +2,6 @@
 
 #include <flutter_linux/flutter_linux.h>
 #include <gtk/gtk.h>
-#include <sys/utsname.h>
 
 #define DESKTOP_WINDOW_PLUGIN(obj)                                     \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), desktop_window_plugin_get_type(), \
@@ -25,15 +24,7 @@ static void desktop_window_plugin_handle_method_call(
 
   const gchar *method = fl_method_call_get_name(method_call);
 
-  if (strcmp(method, "getPlatformVersion") == 0)
-  {
-    struct utsname uname_data = {};
-    uname(&uname_data);
-    g_autofree gchar *version = g_strdup_printf("Linux %s", uname_data.version);
-    g_autoptr(FlValue) result = fl_value_new_string(version);
-    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
-  }
-  else if (strcmp(method, "getWindowSize") == 0)
+  if (strcmp(method, "getWindowSize") == 0)
   {
     if (!gtk_widget_is_toplevel(self->widget))
     {
